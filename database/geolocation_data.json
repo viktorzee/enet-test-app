@@ -1,0 +1,67 @@
+[
+  {
+    "id":1,
+    "longitude":-122.402839,
+    "latitude":37.784738,
+    "entrepriseId":2,
+    "adresse":"22849 Golf View Place",
+    "interlocuteurNom":"Kwimbee",
+    "interlocuteurEmail":"aguinan0@webeden.co.uk",
+    "interlocuteurPhone":"754-578-9259",
+    "commentaire":"null",
+    "photo":"http://dummyimage.com/196x100.png/5fa2dd/ffffff",
+    "laDate":"28/04/2024"
+  },
+  {
+    "id":2,
+    "longitude":-122.402839,
+    "latitude":37.784738,
+    "entrepriseId":1,
+    "adresse":"19 Village Green Hill",
+    "interlocuteurNom":"Bubblebox",
+    "interlocuteurEmail":"mbarabich1@icio.us",
+    "interlocuteurPhone":"845-862-2936",
+    "commentaire":"-1/2",
+    "photo":"http://dummyimage.com/237x100.png/dddddd/000000",
+    "laDate":"22/09/2023"
+  },
+  {
+    "id":3,
+    "longitude":-122.402839,
+    "latitude":37.784738,
+    "entrepriseId":4,
+    "adresse":"599 Lunder Court",
+    "interlocuteurNom":"Centidel",
+    "interlocuteurEmail":"pmoy2@photobucket.com",
+    "interlocuteurPhone":"364-560-2855",
+    "commentaire":"TABLE users",
+    "photo":"http://dummyimage.com/170x100.png/dddddd/000000",
+    "laDate":"14/03/2024"
+  },
+  {
+    "id":4,
+    "longitude":-122.402839,
+    "latitude":37.784738,
+    "entrepriseId":3,
+    "adresse":"7418 Mosinee Park",
+    "interlocuteurNom":"Dabjam",
+    "interlocuteurEmail":"rchatell3@latimes.com",
+    "interlocuteurPhone":"543-312-7620",
+    "commentaire":"nil",
+    "photo":"http://dummyimage.com/247x100.png/ff4444/ffffff",
+    "laDate":"13/02/2024"
+  },
+  {
+    "id":5,
+    "longitude":-122.402839,
+    "latitude":37.784738,
+    "entrepriseId":5,
+    "adresse":"64 Melrose Park",
+    "interlocuteurNom":"Aivee",
+    "interlocuteurEmail":"sbugge4@cisco.com",
+    "interlocuteurPhone":"313-765-3378",
+    "commentaire":"djkvdkfvdfkvdkfvdf",
+    "photo":"http://dummyimage.com/164x100.png/ff4444/ffffff",
+    "laDate":"22/08/2023"
+  }
+]

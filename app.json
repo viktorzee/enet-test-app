@@ -18,10 +18,21 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.viktorzee.enettestapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyC4-Tlwi6RXVrozLwoFxxwhfr5_aK6DrYg"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "6975f332-e140-4b84-9b85-25a171d95e01"
+      }
     }
   }
 }
