@@ -33,7 +33,7 @@ export const AuthStack  = () => {
   return(
       <Stack.Navigator initialRouteName='Login' screenOptions={({navigation}) => ({
           headerStyle: {
-          backgroundColor: "rgb(242, 242, 242)",              
+          backgroundColor: "rgb(242, 242, 242)",                     
           },
           headerTitleAlign: "center",
           headerTintColor: "#2C6150",

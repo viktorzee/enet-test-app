@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
 import jsonData from '../../../../database/geolocation_data.json'
@@ -7,19 +7,13 @@ import jsonData from '../../../../database/geolocation_data.json'
 import { useAppSelector } from '../../../../store/store/hooks';
 import { AuthUser } from '../../../../store/features/userSlice';
 import { useGetAllEntrepriseQuery } from '../../../../store/api/entreprise-api';
-import { Embedded, Entreprise, entrepriseListType, geolocationListType } from '../../../model';
+import { geolocationListType } from '../../../model';
 
 import { Loading } from '../../../components/UI/Loading';
 import WelcomeUser from '../../../components/WelcomeUser';
 import ListView from '../../../components/dashboard/ListView';
 import DMapView from '../../../components/dashboard/MapView';
-import MapView, { Marker } from 'react-native-maps';
 
-const staticData = [
-  { coordinates: { latitude: 37.78383, longitude: -122.405766 } },
-  { coordinates: { latitude: 37.78584, longitude: -122.405478 } },
-  { coordinates: { latitude: 37.784738, longitude: -122.402839 } },
-];
 
 const Dashboard = () => {
   const user = useAppSelector(AuthUser);
@@ -27,7 +21,8 @@ const Dashboard = () => {
   const companies = companiesData?._embedded?.entrepriseDTOModelList
   const [showMapView, setShowMapView] = useState<boolean>(false);
   const [combinedData, setCombinedData] = useState([]);
-  
+  const [visible, setVisible] = useState(false);
+
 
   useEffect(() => {
     if (companiesData) {      
@@ -75,30 +70,13 @@ const Dashboard = () => {
     <SafeAreaView style={styles.container}>       
       {user ? ( <WelcomeUser userName={user?.nom} /> ) : ""}
       <View>
-        {showMapView ? (
-          <MapView
-          style={{
-            // ...StyleSheet.absoluteFillObject,
-            flex: 1,
-            height: 500,
-            width: 500
-          }}
-          initialRegion={{
-            latitude: 37.783363,
-            longitude: -122.403908,
-            latitudeDelta: 0.015922,
-            longitudeDelta: 0.015421,
-          }}
-        >
-          {staticData.map((item, index) => (
-            <Marker key={index} title="Test" coordinate={item.coordinates} />
-          ))}
-        </MapView>
+        {!showMapView ? (
+         <DMapView data={combinedData} />
         ): (
           <ListView data={companies} />
         )}
         <TouchableOpacity style={styles.switchButton} onPress={handleChangeViewToggle}>
-          {showMapView ? (
+          {!showMapView ? (
             <FontAwesomeIcon name='list' size={24} />
           ): (
             <FontAwesomeIcon name='map-marked-alt' size={24}  />

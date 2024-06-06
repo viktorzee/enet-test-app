@@ -1,33 +1,25 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
+import {Image,Text, Dimensions, StyleSheet, TouchableOpacity, View, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useAppSelector } from '../../../../store/store/hooks'
-import { AuthUser } from '../../../../store/features/userSlice'
 import { RouteProp, useRoute } from '@react-navigation/native';
-import { Embedded, Entreprise, RootStackParamList, geolocationListType } from '../../../model';
+import { RootStackParamList, geolocationListType } from '../../../model';
 import { useGetAllEntrepriseQuery, useGetGeoLocationDataQuery } from '../../../../store/api/entreprise-api';
 import { Loading } from '../../../components/UI/Loading';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MapView, { Marker } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import BottomSheet from '../../../components/BottomSheet';
 import companyProfileData from '../../../../database/geolocation_data.json'
 import AuthorProfile from '../../../components/AuthorProfile';
+import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
+
+const { height, width } = Dimensions.get('window');
 
 
 type CompanyProfileRouteProp = RouteProp<RootStackParamList, 'CompanyProfile'>;
 
 const CompanyProfile = () => {
   const route = useRoute<CompanyProfileRouteProp>();
-  const { entrepriseId, entrepriseNom } = route.params;
+  const { entrepriseId, entrepriseNom, phone } = route.params;
   const [companyDetails, setCompanyDetails] = useState<geolocationListType>();  
-  const [visible, setVisible] = useState(false);
-
-  const handleMarkerPress = () => {
-    setVisible(true);
-  };
-
-  const handleDismiss = () => {
-    setVisible(false);
-  };
 
   useEffect(() => {
     // Filter the data to get the company details by companyId
@@ -35,70 +27,48 @@ const CompanyProfile = () => {
     setCompanyDetails(details);
   }, [entrepriseId]);
 
-  // const handleMarkerPress = () => {
-  //   setIsDrawerOpen(true);
-  // };
-  
-
+  const CallButton = () => {
+    const handlePress = () => {
+      Linking.openURL(`tel:${phone}`);
+    };
+  }
   return (
-    <SafeAreaView>
-      <View>
-        {/* <MapView 
-          style={styles.map} 
-          region={{ latitude: 5.35995170, longitude: -4.00825630, latitudeDelta: 0.0922, longitudeDelta: 0.0421 }}
-          showsUserLocation={true}
-        >
-          <Marker coordinate={{
-            latitude: 5.35,
-            longitude: -3.96667,
-          }}  />
-        </MapView> */}
-        
-        <MapView 
-            style={styles.map}
-            initialRegion={{ 
-              latitude: companyDetails?.latitude as number, 
-              longitude: companyDetails?.longitude as number, 
-              latitudeDelta: 0.015922,
-              longitudeDelta: 0.015421, 
-            }}
-            showsUserLocation={true}
-            // initialRegion={}
-            showsCompass
-            showsPointsOfInterest={false}
-            loadingEnabled={true}
-
-          >
-          <Marker
-            coordinate={{ 
-              latitude: companyDetails?.latitude as number,
-              longitude: companyDetails?.longitude as number,
-            }}
-            
-            onPress={handleMarkerPress}
-          />
-        </MapView>
-        {
-          visible && (
-            <BottomSheet visible={visible} onDismiss={handleDismiss}>
-              <View style={styles.detailContainer}>
-                <View>
-                  <AuthorProfile 
-                    photo={companyDetails?.photo}
-                    adresse={companyDetails?.adresse}
-                    comment={companyDetails?.commentaire}
-                    interlocuteurEmail={companyDetails?.interlocuteurEmail}
-                    interlocuteurNom={companyDetails?.interlocuteurNom}
-                    interlocuteurPhone={companyDetails?.interlocuteurPhone}
-                    date={companyDetails?.laDate}
-                    nom={entrepriseNom}
-                  />
-                </View>              
-              </View>
-            </BottomSheet>
-          )
-        }
+    <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
+      <View style={styles.header}>
+        <Image source={{ uri: companyDetails?.photo }} style={styles.avatar} />
+        <Text style={styles.name}>{entrepriseNom}</Text>
+        <Text style={styles.location}>{companyDetails?.adresse}</Text>
       </View>
+      <View style={styles.contactButtons}>
+        <TouchableOpacity style={styles.button}>
+          <FontAwesomeIcon name="phone" color="#fff" />
+          <Text style={styles.buttonText}>CALL US</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.button, styles.mailButton]}>
+          <FontAwesomeIcon name="envelope" color="#fff" />
+          <Text style={styles.buttonText}>MAIL US</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.menu}>
+        <View style={styles.menuItem}>
+          <FontAwesomeIcon name="map-marker" color="#000" />
+          <Text style={styles.menuText}>{companyDetails?.adresse}</Text>
+        </View>                        
+        <View style={styles.menuItem}>
+          <FontAwesomeIcon name="book" color="#000" />
+          <Text style={styles.menuText}>{phone}</Text>
+        </View>        
+        <View style={styles.menuItem}>
+          <FontAwesomeIcon name="info" color="#000" />
+          <Text style={styles.menuText}>{companyDetails?.commentaire}</Text>
+        </View>
+        <View style={styles.menuItem}>
+          <FontAwesomeIcon name="question-circle" color="#000" />
+          <Text style={styles.menuText}>FAQ</Text>
+        </View>        
+      </View>
+    </View>
     </SafeAreaView>
   )
 }
@@ -108,61 +78,76 @@ export default CompanyProfile
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 0,
-    padding: 0,
+    backgroundColor: '#f5f5f5'
   },
-  errorContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  header: {
+    backgroundColor: '#fff',
+    paddingVertical: 20,
+    alignItems: 'center'
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginBottom: 10
+  },
+  name: {
+    fontSize: 22,
+    fontWeight: 'bold'
+  },
+  location: {
+    fontSize: 16,
+    color: '#888'
+  },
+  contactButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20
+  },
+  button: {
+    flexDirection: 'row',
     alignItems: 'center',
+    backgroundColor: '#000',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5
   },
-  errorMessage: {
-    color: 'red',
-    fontSize: 18,
-    textAlign: 'center',
+  mailButton: {
+    backgroundColor: '#d9534f'
   },
-  loaderContainer: {
-    flex: 1,
-    justifyContent: 'center',
+  buttonText: {
+    color: '#fff',
+    marginLeft: 10
+  },
+  menu: {
+    backgroundColor: '#fff',
+    paddingVertical: 20,
+    paddingHorizontal: 10
+  },
+  menuItem: {
+    flexDirection: 'row',
     alignItems: 'center',
+    paddingVertical: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee'
   },
-  map: {
-    width: "100%",
-    height: '100%',
+  menuText: {
+    marginLeft: 20,
+    fontSize: 16
   },
-  detailContainer: {
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
-    elevation: 5,
+  signOutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#d9534f',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 5,
+    marginTop: 20,
+    justifyContent: 'center'
   },
-  fir_image_figure: {
-    margin: 0,
-    display: "flex",
-    alignItems: "center",
-    marginBottom: 40,
-    position: "relative",
-  },
-  photo: {
-    width: '100%',
-    height: 200,
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginTop: 10,
-  },
-  address: {
-    fontSize: 14,
-    marginVertical: 5,
-  },
-  comment: {
-    fontSize: 14,
-    marginVertical: 5,
-  },
-  date: {
-    fontSize: 12,
-    color: 'gray',
-  },
-})
+  signOutText: {
+    color: '#fff',
+    marginRight: 10,
+    fontSize: 16
+  }
+});

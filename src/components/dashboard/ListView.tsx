@@ -24,8 +24,8 @@ const ListView = ({data}: ListViewProps) => {
     setFilteredCompanies(filteredData);
   };
 
-  const handleViewProfile = (id: number, name: string) => {
-    navigation.navigate('CompanyProfile', { entrepriseId: id, entrepriseNom: name });
+  const handleViewProfile = (id: number, name: string, phone: string) => {
+    navigation.navigate('CompanyProfile', { entrepriseId: id, entrepriseNom: name,phone });
   };
 
   return (
@@ -47,7 +47,7 @@ const ListView = ({data}: ListViewProps) => {
                 name={item.nom}
                 phone={item.phone}
                 icon={item.logo}
-                onPress={() => { handleViewProfile(item.id, item.nom) }}
+                onPress={() => { handleViewProfile(item.id, item.nom, item.phone) }}
               />
             )}
           />

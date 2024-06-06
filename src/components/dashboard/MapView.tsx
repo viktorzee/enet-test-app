@@ -1,65 +1,55 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps'
+import MapView, { Callout, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps'
 import { Embedded, Entreprise, geolocationListType } from '../../model'
 
 interface DMapViewProps {
-  data: geolocationListType[]
+  data: (geolocationListType & Entreprise)[];
 }
 
-const DMapView = ({data}: DMapViewProps) => {
+const { height, width } = Dimensions.get('window');
 
-  const calculateInitialRegion = (data: geolocationListType[]): Region => {
-    const validData = data.filter(item => item.latitude !== undefined && item.longitude !== undefined);
-    if (validData.length === 0) {
-      return {
-        latitude: 0,
-        longitude: 0,
-        latitudeDelta: 0.0922,
-        longitudeDelta: 0.0421,
-      };
-    }
-
-    const latitudeSum = validData.reduce((sum, item) => sum + item.latitude, 0);
-    const longitudeSum = validData.reduce((sum, item) => sum + item.longitude, 0);
-    
-    const latitude = latitudeSum / validData.length;
-    const longitude = longitudeSum / validData.length;
-  
-    const latitudeDelta = 0.0922;
-    const longitudeDelta = 0.0421;
-  
-    return {
-      latitude,
-      longitude,
-      latitudeDelta,
-      longitudeDelta,
-    };
-  };
-
-  const initialRegion = calculateInitialRegion(data);
-
-
+const DMapView = ({ data }: DMapViewProps) => {
   return (
     <View>
-      <MapView style={styles.map} 
+      <MapView
+        style={styles.map}
         initialRegion={{
-          latitude: 37.784738, 
-          longitude: -122.402839,
+          latitude: 37.783363,
+          longitude: -122.403908,
           latitudeDelta: 0.015922,
-          longitudeDelta: 0.015421, 
+          longitudeDelta: 0.015421,
         }}
-        provider={PROVIDER_GOOGLE}
-      />
-          
-  </View>
-  )
-}
+      >
+        {data.map((item, index) => (
+          <Marker
+            key={index}
+            title={item.nom}
+            description={item.adresse}
+            coordinate={{
+              latitude: item.latitude,
+              longitude: item.longitude,
+            }}
+          >
+            <Callout>
+              <View>
+                <Text>{item.nom}</Text>
+                {item.adresse && <Text>{item.commentaire}</Text>}
+                {item.phone && <Text>{item.phone}</Text>}
+              </View>
+            </Callout>
+          </Marker>
+        ))}
+      </MapView>
+    </View>
+  );
+};
 
 export default DMapView
 
 const styles = StyleSheet.create({
   map: {
-    ...StyleSheet.absoluteFillObject,
+    width,
+    height,
   },
 })

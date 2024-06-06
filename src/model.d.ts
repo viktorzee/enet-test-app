@@ -1,7 +1,7 @@
 type RootStackParamList = {
   Dashboard: undefined;
   Login: undefined;
-  CompanyProfile: {entrepriseId: number, entrepriseNom: string};
+  CompanyProfile: {entrepriseId: number, entrepriseNom: string, phone: string};
 }
 
 //enterprise types
