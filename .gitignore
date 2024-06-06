@@ -36,5 +36,5 @@ yarn-error.*
 *.tsbuildinfo
 
 #eas
-eas.json
-app.json
+# eas.json
+# app.json
