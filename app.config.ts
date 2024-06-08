@@ -1,7 +1,7 @@
 import { ExpoConfig, ConfigContext } from '@expo/config'
 
-const APIKEY = process.env.EXPO_PUBLIC_GOOGLE_MAP_API_KEY;
-const PROJECTID = process.env.EXPO_PUBLIC_EAS_PROJECTID;
+const apiKey = process.env.EXPO_PUBLIC_GOOGLE_MAP_API_KEY as string;
+const projectId = process.env.EXPO_PUBLIC_EAS_PROJECTID as string;
 
 export default ({config}: ConfigContext): ExpoConfig => ({
   ...config,
@@ -20,7 +20,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
       package: "com.viktorzee.enettestapp",
       config: {
         googleMaps: {
-          apiKey: APIKEY?.toString()
+          apiKey: "AIzaSyC4-Tlwi6RXVrozLwoFxxwhfr5_aK6DrYg",
         }
       }
     },
@@ -29,7 +29,7 @@ export default ({config}: ConfigContext): ExpoConfig => ({
     },
     extra: {
       eas: {
-        projectId: PROJECTID?.toString()
+        projectId: "6975f332-e140-4b84-9b85-25a171d95e01",
       }
     }
 })

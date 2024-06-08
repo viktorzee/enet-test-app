@@ -50,7 +50,8 @@ export const login = createAsyncThunk<
             // await axios.request(+)
             const result = await axios.post(`${BASE_URL}/linguere/auth/editeur/seconnecter`, { email, password }, );
             return result.data;
-        } catch (error:any) {       
+        } catch (error:any) {
+            console.log("error", error)     
             if (axios.isAxiosError(error)) {
                 if (!error.response) {
                     return rejectWithValue('Erreur réseau. Veuillez vérifier votre connexion.');
