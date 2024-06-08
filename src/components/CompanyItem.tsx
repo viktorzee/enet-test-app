@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 interface CompanyItemProps {
   name: string;
   phone: string;
-  icon: any;
+  icon: string;
   onPress: () => void;
 }
 

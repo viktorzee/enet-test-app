@@ -28,10 +28,8 @@ export default WelcomeUser
 
 const styles = StyleSheet.create({
   container: {
-    // marginTop: 20,
-    // alignItems: 'center',
     paddingHorizontal: 10,
-    marginBottom: 10,
+    marginBottom: 5,
   },
   welcomeText: {
     fontSize: 20,

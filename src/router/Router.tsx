@@ -74,8 +74,10 @@ export const AppNavigator = () => {
           </TouchableOpacity>
         ),
         headerStyle:  {
-          height: 80,
-        }    
+          height: 80,      
+        },
+        // headerTransparent: true
+
       }}>                  
         <Stack.Screen name="Dashboard" component={Dashboard} 
           options={{

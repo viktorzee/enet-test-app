@@ -2,8 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
-import jsonData from '../../../../database/geolocation_data.json'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+import jsonData from '../../../../database/geolocation_data.json'
 import { useAppSelector } from '../../../../store/store/hooks';
 import { AuthUser } from '../../../../store/features/userSlice';
 import { useGetAllEntrepriseQuery } from '../../../../store/api/entreprise-api';
@@ -17,13 +18,32 @@ import CompanyMapView from '../../../components/dashboard/MapView';
 const { width, height } = Dimensions.get('window');
 
 const Dashboard = () => {
+  const [token, setToken] = useState<string | null>(null);
   const user = useAppSelector(AuthUser);
-  const {data: companiesData, isLoading, error } = useGetAllEntrepriseQuery();
+  const {data: companiesData, isLoading, error } = useGetAllEntrepriseQuery(undefined, { skip: !token });
   const companies = companiesData?._embedded?.entrepriseDTOModelList
   const [showMapView, setShowMapView] = useState<boolean>(false);
   const [combinedData, setCombinedData] = useState< (geolocationListType & Entreprise)[] >([]);
-  const [visible, setVisible] = useState(false);
 
+  
+  useEffect(() => {
+    const fetchToken = async () => {
+      const storedToken = await AsyncStorage.getItem('token');
+      console.log('Fetched token:', storedToken); // Logging the token
+      setToken(storedToken);
+    };
+
+    fetchToken();
+  }, []);
+
+  // useEffect(() => {
+  //   if (token) {
+  //     console.log('Token available, refetching data');
+  //     refetch();
+  //   } else {
+  //     console.log('Token not available, skipping refetch');
+  //   }
+  // }, [token, refetch]);
 
   useEffect(() => {
     if (companiesData) {      
@@ -45,11 +65,11 @@ const Dashboard = () => {
   
 
 
-  if (isLoading) {
+  if (isLoading || !token) {
     return (
       <View style={styles.loaderContainer}>
         {/* return loading if api fetch is on */}
-        <Loading />      
+        <Loading color='black' />      
       </View>
     );
   }
@@ -69,7 +89,7 @@ const Dashboard = () => {
   }
 
   return (
-    <SafeAreaView style={styles.container}>       
+    <SafeAreaView style={styles.container}>   
       {user ? ( <WelcomeUser userName={user?.nom} /> ) : ""}
       <View>
         {!showMapView ? (
@@ -94,6 +114,7 @@ export default Dashboard
 const styles = StyleSheet.create({
   container:{
     flex: 1,
+    paddingTop: -19
   },
   loaderContainer: {
     flex: 1,
@@ -118,8 +139,8 @@ const styles = StyleSheet.create({
     width: width * 0.2,
     height: width * 0.2,
     position: 'absolute',
-    top: height * 0.7,
-    right: width * 0.05,
+    top: height * 0.73,
+    right: width * 0.03,
     backgroundColor: '#fff',
     borderRadius: (width * 0.2) / 2, 
   },

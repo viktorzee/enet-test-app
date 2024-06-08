@@ -37,4 +37,4 @@ yarn-error.*
 
 #eas
 eas.json
-app.config.js
+app.config.ts

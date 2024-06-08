@@ -1,9 +1,10 @@
-import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import MapView, { Callout, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps'
-import { Entreprise, RootStackParamList, geolocationListType } from '../../model'
+import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+import MapView, { Callout, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps'
+
+import { Entreprise, RootStackParamList, geolocationListType } from '../../model'
 
 interface DMapViewProps {
   data: (geolocationListType & Entreprise)[];

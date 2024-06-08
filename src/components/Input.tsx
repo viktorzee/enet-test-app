@@ -7,11 +7,9 @@ import {
 } from "react-native";
 import React from "react";
 import { Colors } from "../constants/Colors";
-// import { useFonts } from 'expo-font';
-// import * as SplashScreen from 'expo-splash-screen';
 
 interface CustomInputProps extends TextInputProps {
-    isInvalid?: any;
+  isInvalid?: boolean;
 }
 
 const Input = ({
@@ -23,21 +21,7 @@ const Input = ({
     accessibilityLabel,
     style,
     placeholder,
-}: CustomInputProps) => {
-    // const [fontsLoaded] = useFonts({
-    //     'Montserrat': require('../assets/fonts/Montserrat-Regular.ttf'),
-    // });
-    
-    // // const onLayoutRootView = useCallback(async () => {
-    // //     if (fontsLoaded) {
-    // //       await SplashScreen.hideAsync();
-    // //     }
-    // // }, [fontsLoaded]);
-    
-    //   if (!fontsLoaded) {
-    //     return null;
-    // }
-    
+}: CustomInputProps) => {    
     return (
         <View style={styles.inputContainer}>
           {accessibilityLabel ? (<Text style={[styles.label, style, isInvalid && styles.labelInvalid]}>

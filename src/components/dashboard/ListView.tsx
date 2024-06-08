@@ -1,10 +1,11 @@
 import { FlatList, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
-import { Entreprise, RootStackParamList, entrepriseListType } from '../../model'
-import SearchBar from '../SearchBar';
-import CompanyItem from '../CompanyItem';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { useNavigation } from '@react-navigation/native';
+
+import { Entreprise, RootStackParamList } from '../../model'
+import SearchBar from '../SearchBar';
+import CompanyItem from '../CompanyItem';
 
 
 interface ListViewProps {

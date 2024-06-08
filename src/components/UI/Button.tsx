@@ -1,9 +1,11 @@
 import {
   Pressable,
   PressableProps,
+  StyleProp,
   StyleSheet,
   Text,
   View,
+  ViewStyle,
 } from "react-native";
 import React from "react";
 import { Colors } from "../../constants/Colors";
@@ -11,7 +13,7 @@ import { Colors } from "../../constants/Colors";
 export interface ButtonProps extends PressableProps {
   children: React.ReactNode;
   onPress: () => void; 
-  style?: any
+  style?:  StyleProp<ViewStyle>;
   color?: string
 }
 
