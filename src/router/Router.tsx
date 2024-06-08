@@ -8,9 +8,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAppDispatch } from '../../store/store/hooks';
 import { logout } from '../../store/features/userSlice';
 import { RootStackParamList } from '../model';
-import { Dashboard, Login } from '../screens/user';
+import { Dashboard, Login, CompanyProfile } from '../screens/user';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import CompanyProfile from '../screens/user/Home/CompanyProfile';
 
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -37,6 +36,7 @@ export const AuthStack  = () => {
           },
           headerTitleAlign: "center",
           headerTintColor: "#2C6150",
+          
           headerLeft: () => (
           <TouchableOpacity onPress={() => navigation.goBack()}>
               {/* Use chevron back icon */}
@@ -72,11 +72,14 @@ export const AppNavigator = () => {
           <TouchableOpacity onPress={handleLogout} style={styles.logoutButton}>
             <MaterialCommunityIcons name='exit-to-app' size={30}/>
           </TouchableOpacity>
-        ),        
+        ),
+        headerStyle:  {
+          height: 80,
+        }    
       }}>                  
         <Stack.Screen name="Dashboard" component={Dashboard} 
           options={{
-              title: "Home",                
+              title: "Home",                           
               headerLeft: () => (
                 <Text style={{display: "none"}}></Text>
               ),

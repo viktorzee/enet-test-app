@@ -93,7 +93,6 @@ const Login:React.FC<LoginProp> = ({navigation}) => {
                   value={values.email}
                   keyboardType='email-address'
                   placeholder='johndoe@example.com'
-                  defaultValue='monsieurviktor@yahoo.com'
                   placeholderTextColor={Colors.placeholderText}
                 />
                 { errors.email && <Text style={styles.errorMessage}>{errors.email.toString()}</Text> }
@@ -107,7 +106,6 @@ const Login:React.FC<LoginProp> = ({navigation}) => {
                     keyboardType='default'
                     secureTextEntry={!showPassword}
                     placeholder='********'
-                    defaultValue='xwCvrZ1'
                     placeholderTextColor={Colors.placeholderText}
                   />
                   <TouchableOpacity onPress={togglePasswordVisibility} style={[styles.icon, { right: width * 0.02 + iconRightMargin }]}>

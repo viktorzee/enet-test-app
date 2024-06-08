@@ -1,15 +1,23 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import MapView, { Callout, Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps'
-import { Embedded, Entreprise, geolocationListType } from '../../model'
+import { Entreprise, RootStackParamList, geolocationListType } from '../../model'
+import { StackNavigationProp } from '@react-navigation/stack';
+import { useNavigation } from '@react-navigation/native';
 
 interface DMapViewProps {
   data: (geolocationListType & Entreprise)[];
 }
+type CompanyListScreenNavigationProp = StackNavigationProp<RootStackParamList, 'CompanyProfile'>;
 
 const { height, width } = Dimensions.get('window');
 
-const DMapView = ({ data }: DMapViewProps) => {
+const CompanyMapView = ({ data }: DMapViewProps) => {
+  const navigation = useNavigation<CompanyListScreenNavigationProp>();
+
+  const handleViewProfile = (id: number, name: string, phone: string) => {
+    navigation.navigate('CompanyProfile', { entrepriseId: id, entrepriseNom: name,phone });
+  };
   return (
     <View>
       <MapView
@@ -20,6 +28,7 @@ const DMapView = ({ data }: DMapViewProps) => {
           latitudeDelta: 0.015922,
           longitudeDelta: 0.015421,
         }}
+        provider={PROVIDER_GOOGLE}
       >
         {data.map((item, index) => (
           <Marker
@@ -31,9 +40,9 @@ const DMapView = ({ data }: DMapViewProps) => {
               longitude: item.longitude,
             }}
           >
-            <Callout>
+            <Callout onPress={() =>  { handleViewProfile(item.id, item.nom, item.phone) }}>
               <View>
-                <Text>{item.nom}</Text>
+                <Text style={{fontWeight: "600"}}>{item.nom}</Text>
                 {item.adresse && <Text>{item.commentaire}</Text>}
                 {item.phone && <Text>{item.phone}</Text>}
               </View>
@@ -45,7 +54,7 @@ const DMapView = ({ data }: DMapViewProps) => {
   );
 };
 
-export default DMapView
+export default CompanyMapView
 
 const styles = StyleSheet.create({
   map: {

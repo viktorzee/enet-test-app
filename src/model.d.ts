@@ -66,3 +66,13 @@ interface geolocationListType {
   interlocuteurPhone: string;
   // _links?: Links;
 }
+
+type AuthorProfileProps = {
+  nom: string | undefined;
+  adresse: string | undefined;
+  date: string | undefined;
+  comment: string | undefined;
+  interlocuteurNom: string | undefined;
+  interlocuteurEmail: string | undefined;
+  interlocuteurPhone: string | undefined;
+};

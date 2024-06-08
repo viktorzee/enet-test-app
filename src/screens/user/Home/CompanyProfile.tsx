@@ -1,18 +1,11 @@
-import {Image,Text, Dimensions, StyleSheet, TouchableOpacity, View, Linking } from 'react-native'
+import { Image,Text, StyleSheet, TouchableOpacity, View, Linking } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList, geolocationListType } from '../../../model';
-import { useGetAllEntrepriseQuery, useGetGeoLocationDataQuery } from '../../../../store/api/entreprise-api';
-import { Loading } from '../../../components/UI/Loading';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import BottomSheet from '../../../components/BottomSheet';
 import companyProfileData from '../../../../database/geolocation_data.json'
-import AuthorProfile from '../../../components/AuthorProfile';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome';
-
-const { height, width } = Dimensions.get('window');
-
+import AuthorProfile from '../../../components/AuthorProfile';
 
 type CompanyProfileRouteProp = RouteProp<RootStackParamList, 'CompanyProfile'>;
 
@@ -27,13 +20,16 @@ const CompanyProfile = () => {
     setCompanyDetails(details);
   }, [entrepriseId]);
 
-  const CallButton = () => {
-    const handlePress = () => {
-      Linking.openURL(`tel:${phone}`);
-    };
+  const handleCallButton = () => {
+    Linking.openURL(`tel:${phone}`);
   }
+
+  const handleMailButton = () => {
+    Linking.openURL(`mailto:${phone}`);
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} >
         <View style={styles.container}>
       <View style={styles.header}>
         <Image source={{ uri: companyDetails?.photo }} style={styles.avatar} />
@@ -41,33 +37,22 @@ const CompanyProfile = () => {
         <Text style={styles.location}>{companyDetails?.adresse}</Text>
       </View>
       <View style={styles.contactButtons}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={handleCallButton}>
           <FontAwesomeIcon name="phone" color="#fff" />
           <Text style={styles.buttonText}>CALL US</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.button, styles.mailButton]}>
+        <TouchableOpacity style={[styles.button, styles.mailButton]} onPress={handleMailButton}>
           <FontAwesomeIcon name="envelope" color="#fff" />
           <Text style={styles.buttonText}>MAIL US</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.menu}>
-        <View style={styles.menuItem}>
-          <FontAwesomeIcon name="map-marker" color="#000" />
-          <Text style={styles.menuText}>{companyDetails?.adresse}</Text>
-        </View>                        
-        <View style={styles.menuItem}>
-          <FontAwesomeIcon name="book" color="#000" />
-          <Text style={styles.menuText}>{phone}</Text>
-        </View>        
-        <View style={styles.menuItem}>
-          <FontAwesomeIcon name="info" color="#000" />
-          <Text style={styles.menuText}>{companyDetails?.commentaire}</Text>
-        </View>
-        <View style={styles.menuItem}>
-          <FontAwesomeIcon name="question-circle" color="#000" />
-          <Text style={styles.menuText}>FAQ</Text>
-        </View>        
-      </View>
+      <AuthorProfile 
+        nom={entrepriseNom}
+        adresse={companyDetails?.adresse}
+        commentaire={companyDetails?.commentaire}
+        interlocuteurPhone={companyDetails?.interlocuteurPhone}
+        date={companyDetails?.laDate}
+      />
     </View>
     </SafeAreaView>
   )
@@ -78,7 +63,8 @@ export default CompanyProfile
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5'
+    backgroundColor: '#f5f5f5',
+    paddingTop:  0
   },
   header: {
     backgroundColor: '#fff',
