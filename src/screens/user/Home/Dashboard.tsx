@@ -20,7 +20,7 @@ const { width, height } = Dimensions.get('window');
 const Dashboard = () => {
   const [token, setToken] = useState<string | null>(null);
   const user = useAppSelector(AuthUser);
-  const {data: companiesData, isLoading, error } = useGetAllEntrepriseQuery(undefined, { skip: !token });
+  const {data: companiesData, isLoading, error, refetch } = useGetAllEntrepriseQuery(undefined, { skip: !token });
   const companies = companiesData?._embedded?.entrepriseDTOModelList
   const [showMapView, setShowMapView] = useState<boolean>(false);
   const [combinedData, setCombinedData] = useState< (geolocationListType & Entreprise)[] >([]);
@@ -32,18 +32,16 @@ const Dashboard = () => {
       console.log('Fetched token:', storedToken); // Logging the token
       setToken(storedToken);
     };
-
+  
     fetchToken();
   }, []);
-
-  // useEffect(() => {
-  //   if (token) {
-  //     console.log('Token available, refetching data');
-  //     refetch();
-  //   } else {
-  //     console.log('Token not available, skipping refetch');
-  //   }
-  // }, [token, refetch]);
+  
+  useEffect(() => {
+    if (token) {
+      console.log('Token available, refetching data');
+      refetch();
+    }
+  }, [token, refetch]);
 
   useEffect(() => {
     if (companiesData) {      

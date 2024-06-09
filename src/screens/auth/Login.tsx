@@ -66,7 +66,7 @@ const Login:React.FC<LoginProp> = ({navigation}) => {
               const login_response = await dispatch(login(values)).unwrap();
               if (login_response) {
                 const token = login_response.token;
-                AsyncStorage.setItem('token', token);
+                await AsyncStorage.setItem('token', token);
                 Toast.show({
                   type: 'success',
                   text1: 'Login Successful',
@@ -74,7 +74,7 @@ const Login:React.FC<LoginProp> = ({navigation}) => {
                 });
                 navigation.navigate("Dashboard")
               } else {
-                AsyncStorage.clear();
+                await AsyncStorage.clear();
               }
             } catch (error) {
               setErrorMessage(error as any)
