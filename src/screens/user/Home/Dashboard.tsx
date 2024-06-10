@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context';
 import FontAwesomeIcon from 'react-native-vector-icons/FontAwesome5';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import jsonData from '../../../../database/geolocation_data.json'
 import { useAppSelector } from '../../../../store/store/hooks';
-import { AuthUser } from '../../../../store/features/userSlice';
+import { AuthToken, AuthUser } from '../../../../store/features/userSlice';
 import { useGetAllEntrepriseQuery } from '../../../../store/api/entreprise-api';
 import { Entreprise, geolocationListType } from '../../../model';
 
@@ -18,36 +17,18 @@ import CompanyMapView from '../../../components/dashboard/MapView';
 const { width, height } = Dimensions.get('window');
 
 const Dashboard = () => {
-  const [token, setToken] = useState<string | null>(null);
   const user = useAppSelector(AuthUser);
-  const {data: companiesData, isLoading, error, refetch } = useGetAllEntrepriseQuery(undefined, { skip: !token });
+  const {data: companiesData, isLoading, error } = useGetAllEntrepriseQuery();
   const companies = companiesData?._embedded?.entrepriseDTOModelList
   const [showMapView, setShowMapView] = useState<boolean>(false);
   const [combinedData, setCombinedData] = useState< (geolocationListType & Entreprise)[] >([]);
-
   
-  useEffect(() => {
-    const fetchToken = async () => {
-      const storedToken = await AsyncStorage.getItem('token');
-      console.log('Fetched token:', storedToken); // Logging the token
-      setToken(storedToken);
-    };
-  
-    fetchToken();
-  }, []);
-  
-  useEffect(() => {
-    if (token) {
-      console.log('Token available, refetching data');
-      refetch();
-    }
-  }, [token, refetch]);
 
   useEffect(() => {
     if (companiesData) {      
       const jsonDataArray: geolocationListType[] = jsonData;
       
-      //combine the geolocation data based on the companyId to the data from api
+      //combine the geolocation data based on the companyId to the data from the api for mapview disoa
       if (companies && jsonDataArray) {
         const combined = companies.map(entreprise => {
           const additionalInfo = jsonDataArray.find(item => item.entrepriseId === entreprise.id);
@@ -63,7 +44,7 @@ const Dashboard = () => {
   
 
 
-  if (isLoading || !token) {
+  if (isLoading) {
     return (
       <View style={styles.loaderContainer}>
         {/* return loading if api fetch is on */}

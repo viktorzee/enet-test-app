@@ -1,6 +1,7 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import { axiosBaseQuery } from "../../src/config/axiosBaseQuery";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { entrepriseListType, geolocationListType } from "../../src/model";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { RootState } from "../store/store";
 
 const BASE_URL = process.env.EXPO_PUBLIC_LINGERE_URL;
 
@@ -11,22 +12,32 @@ interface GeoLocationParams {
 
 export const entrepriseApi = createApi({
     reducerPath: "entrepriseApi",
-    baseQuery: axiosBaseQuery({baseUrl: `${BASE_URL}`}),
+    baseQuery: fetchBaseQuery({
+      baseUrl: `${BASE_URL}`, 
+      prepareHeaders: async (headers, { getState }) => {
+        const token = (getState() as RootState)?.user?.token;
+        console.log("token", token)
+        if (token) {
+          headers.set('authorization', `Bearer ${token}`);
+        }
+        return headers;
+    },
+    }),
     tagTypes: ['Entreprise'],
     endpoints: (builder) => ({                
         getAllEntreprise: builder.query <entrepriseListType, void>({
-            query: () => ({
-              url: "/recrutement/react/entreprise",
-              method: "GET",
-            }),
-            providesTags: ["Entreprise"],
+            query: () => "/recrutement/react/entreprise",
+            
+            providesTags: (result) =>
+              result && Array.isArray(result)
+                ? [
+                    ...result.map(({ id }) => ({ type: 'Entreprise' as const, id })),
+                    { type: 'Entreprise', id: 'LIST' },
+                  ]
+                : [{ type: 'Entreprise', id: 'LIST' }],
         }),
         getGeoLocationData: builder.query<geolocationListType, GeoLocationParams>({
-            query: ({userId, entrepriseId}) => ({
-              url: `/recrutement/react/geolocalisation/editeur/${userId}/entreprise/${entrepriseId}`,
-              method: "GET",
-            }),
-            providesTags: ["Entreprise"],
+            query: ({userId, entrepriseId}) => `/recrutement/react/geolocalisation/editeur/${userId}/entreprise/${entrepriseId}`,            
         }),        
     })
 })

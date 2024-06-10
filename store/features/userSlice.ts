@@ -26,49 +26,45 @@ const initialState: AuthState = {
     isLoading: false,
 };
 
-interface updateType{
-    id: string;
-    values: any
-}
-
 const BASE_URL = process.env.EXPO_PUBLIC_AUTH_URL;
 
-export const login = createAsyncThunk< 
+export const login = createAsyncThunk<
     { user: User; token: string },
     { email: string; password: string },
     { rejectValue: string }
-    >(
+>(
     'auth/login',
     async (values, { rejectWithValue }) => {
         const { email, password } = values;
-    
+
         if (!email) {
-            return rejectWithValue('email is wrong');
+            return rejectWithValue('Email is required');
         }
 
         try {
-            // await axios.request(+)
             const result = await axios.post(`${BASE_URL}/linguere/auth/editeur/seconnecter`, { email, password }, );
             return result.data;
-        } catch (error:any) {
-            console.log("error", error)     
+        } catch (error: any) {
+            console.log("error", error);
             if (axios.isAxiosError(error)) {
                 if (!error.response) {
                     return rejectWithValue('Erreur réseau. Veuillez vérifier votre connexion.');
                 }
-                if (error.response.status === 401) {
-                    return rejectWithValue('email ou mot de passe invalide.');
+                switch (error.response.status) {
+                    case 401:
+                        return rejectWithValue('email ou mot de passe invalide.');
+                    case 500:
+                        return rejectWithValue('Erreur du serveur. Veuillez réessayer plus tard.');
+                    default:
+                        return rejectWithValue('Une erreur inattendue est apparue. Veuillez réessayer.');
                 }
-                if (error.response.status === 500) {
-                    return rejectWithValue('Erreur du serveur. Veuillez réessayer plus tard.');
-                }
-                return rejectWithValue('Une erreur inattendue est apparue. Veuillez réessayer.');
             } else {
                 return rejectWithValue('Une erreur inconnue est survenue. Veuillez réessayer.');
             }
         }
     }
 );
+
 
 
 
@@ -86,7 +82,7 @@ export const userSlice = createSlice({
     extraReducers: (builder) => {
         builder
         .addCase(login.pending, (state) => {
-          state.isLoading = true;
+            state.isLoading = true;
         })
         .addCase(login.fulfilled, (state, action) => {
             state.user = action.payload.user;

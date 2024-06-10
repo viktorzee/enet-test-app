@@ -42,6 +42,7 @@ const Login:React.FC<LoginProp> = ({navigation}) => {
     setShowPassword(!showPassword);
   };
 
+
   return (
     <SafeAreaView style={styles.container}>
       <View>
@@ -61,25 +62,32 @@ const Login:React.FC<LoginProp> = ({navigation}) => {
           validationSchema={loginSchema}
           onSubmit={async (values) => {
             setIsLoading(true);
-            setErrorMessage("");
+            setErrorMessage(null);
             try {
-              const login_response = await dispatch(login(values)).unwrap();
-              if (login_response) {
-                const token = login_response.token;
-                await AsyncStorage.setItem('token', token);
+              const loginResponse = await dispatch(login(values)).unwrap();
+              if (loginResponse) {
+                const token = loginResponse.token;    
+                try {
+                    await AsyncStorage.setItem('token', token);
+                } catch (e) {
+                    console.error('Failed to save the token to storage', e);
+                    setErrorMessage('An error occurred while saving the token. Please try again.');
+                    return;
+                }
+    
                 Toast.show({
-                  type: 'success',
-                  text1: 'Login Successful',
-                  text2: 'You are logged in!',
+                    type: 'success',
+                    text1: 'Login Successful',
+                    text2: 'You are logged in!',
                 });
-                navigation.navigate("Dashboard")
+                navigation.navigate('Dashboard');
               } else {
-                await AsyncStorage.clear();
+                  await AsyncStorage.clear();
               }
             } catch (error) {
-              setErrorMessage(error as any)
+                setErrorMessage(error as string);
             } finally {
-              setIsLoading(false)
+                setIsLoading(false);
             }
             
           }}
